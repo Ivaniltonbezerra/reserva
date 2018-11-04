@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+ layout:decorator="'layout/MainlyLayout'">
+
+<head>
+	<title>ReservaLab - Laboratórios</title>
+
+</head>
+
+<body>
+
+	<section layout:fragment="content">
+		<div class="container-fluid">
+			<div style="margin-top: 60px;">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="clearfix">
+							<h2 style="float: left;">Laboratorios cadastrados</h2>
+							<a style="float: right;" class="btn btn-link aw-link-panel" href="/laboratorio/create">Criar Laboratorio</a>
+						</div>
+					</div>
+					<div class="panel-body">
+						<form class="form-horizontal" method="GET" action="/laboratorio/list" th:object="${laboratorioFilter}">
+
+
+
+
+							<div th:fragment="mensagemGeral" class="alert alert-success" th:if="${!#strings.isEmpty(message)}">
+					          <span th:text="${message}"></span>
+				           </div>
+
+							<div th:fragment="mensagemErro" class="alert alert-danger" th:if="${!#strings.isEmpty(messageErro)}">
+								<span th:text="${messageErro}"></span>
+							</div>
+
+							<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+								<div th:each="detailedError : ${#fields.detailedErrors()}">
+									<span th:text="${detailedError.message}"></span>
+								</div>
+							</div>
+
+
+							<div class="container">
+
+								<div class="form-group" th:classappend="${#fields.hasErrors('cursofk')} ? has-error">
+	<label for="cursofk" class="col-sm-2 col-xs-12  control-label">Curso
+	</label>
+	<div class="col-sm-4 col-xs-12 ">
+		<select class="form-control" th:field="*{cursofk}">
+			<option value="">Selecionar</option>
+			<option th:each="gclass : ${cursofkList}" th:value="${gclass.id}" th:text="${gclass.descricao}"></option>
+		</select>
+
+	</div>
+</div>
+
+<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
+	<label for="nome" class="col-sm-2 col-xs-12  control-label">Nome:
+	</label>
+	<div class="col-sm-4 col-xs-12 ">
+		<input type="text" class="form-control" th:field="*{nome}" id="nome" />
+	</div>
+</div>
+
+<div class="form-group" th:classappend="${#fields.hasErrors('localizacao')} ? has-error">
+	<label for="localizacao" class="col-sm-2 col-xs-12  control-label">Localizacao:
+	</label>
+	<div class="col-sm-4 col-xs-12 ">
+		<input type="text" class="form-control" th:field="*{localizacao}" id="localizacao" />
+	</div>
+</div>
+
+<div class="form-group" th:classappend="${#fields.hasErrors('tamanho')} ? has-error">
+	<label for="tamanho" class="col-sm-2 col-xs-12  control-label">Tamanho:
+	</label>
+	<div class="col-sm-4 col-xs-12 ">
+		<input type="text" class="form-control" th:field="*{tamanho}" id="tamanho" />
+	</div>
+</div>
+
+<div class="form-group" th:classappend="${#fields.hasErrors('equipamentos')} ? has-error">
+	<label for="equipamentos" class="col-sm-2 col-xs-12  control-label">Equipamentos:
+	</label>
+	<div class="col-sm-4 col-xs-12 ">
+		<input type="text" class="form-control" th:field="*{equipamentos}" id="equipamentos" />
+	</div>
+</div>
+
+<div class="form-group" th:classappend="${#fields.hasErrors('tipo')} ? has-error">
+	<label for="tipo" class="col-sm-2 col-xs-12  control-label">Tipo:
+	</label>
+	<div class="col-sm-4 col-xs-12 ">
+		<input type="text" class="form-control" th:field="*{tipo}" id="tipo" />
+	</div>
+</div>
+
+<div class="form-group" th:classappend="${#fields.hasErrors('situacao')} ? has-error">
+	<label for="situacao" class="col-sm-2 col-xs-12  control-label">Situacao:
+	</label>
+	<div class="col-sm-4 col-xs-12 ">
+		<input type="text" class="form-control" th:field="*{situacao}" id="situacao" />
+	</div>
+</div>
+
+
+
+
+								<div class="form-group">
+									<br>
+									<div class="col-sm-offset-2 col-sm-10">
+										<button type="submit" class="btn  btn-primary">Pesquisar</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						<div class="table-responsive" th:if="${pagina != null}">
+							<table class="table table-bordered table-striped " style="margin-top: 60px;">
+								<thead>
+									<tr>
+
+
+
+										<td>ID</td>
+<td>CURSO</td>
+<td>NOME</td>
+<td>LOCALIZAÇÃO</td>
+<td>TAMANHO</td>
+<td>EQUIPAMENTOS</td>
+<td>TIPO</td>
+<td>SITUAÇÃO</td>
+<td>#</td>
+
+
+
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="obj : ${pagina.conteudo}">
+										<td th:text="${obj.id}" ></td><td th:text="${obj.cursofk.Id}" ></td><td th:text="${obj.nome}" ></td><td th:text="${obj.localizacao}" ></td><td th:text="${obj.tamanho}" ></td><td th:text="${obj.equipamentos}" ></td><td th:text="${obj.tipo}" ></td><td th:text="${obj.situacao}" ></td>
+										<td class="text-center">
+
+											<form method="POST" th:action="@{/laboratorio/delete/{code}(code=${obj.id})}">
+												<input type="hidden" name="_method" value="DELETE" />
+
+												<a class="btn btn-link btn-xs" th:href="@{/laboratorio/{code}(code=${obj.id})}" title="Editar" rel="tooltip"
+												 data-placement="top">
+													<span class="glyphicon glyphicon-pencil"></span>
+												</a>
+
+
+												<button class="btn btn-link btn-xs" title="Delete" type="submit" data-placement="top">
+													<span class="glyphicon glyphicon-remove"></span>
+												</button>
+											</form>
+										</td>
+
+
+									</tr>
+									<tr>
+										<td colspan="12" th:if="${#lists.isEmpty(pagina.conteudo)}">No records found</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="col-sm-12  text-center" th:if="${not #lists.isEmpty(pagina.conteudo)}">
+								<nav>
+									<ul class="center pagination" th:if="${not pagina.vazia}" th:with="paginaAtual=${pagina.atual}">
+										<li th:if="${not pagina.primeira}" th:class="${pagina.primeira} ? disabled">
+											<a th:href="${pagina.urlParaPagina(paginaAtual - 1)}" th:remove="${pagina.primeira} ? tag">
+												<i>
+													<</i>
+											</a>
+										</li>
+
+										<li th:if="${(paginaAtual - 2) > 0}">
+											<a th:href="${pagina.urlParaPagina(0)}">1
+												<span>...</span>
+											</a>
+										</li>
+
+										<th:block th:each="p : ${#numbers.sequence(1, pagina.total)}" th:with="numeroPagina = ${p - 1} ">
+											<li th:if="${(p + 1 >= paginaAtual and p - 1 <= paginaAtual + 2)}" th:class="${paginaAtual == numeroPagina} ? 'active deep-purple darken-4' : 'waves-effect' ">
+												<a th:href="${pagina.urlParaPagina(numeroPagina)}" th:text="${p}">1</a>
+											</li>
+										</th:block>
+
+										<li th:if="${(paginaAtual + 3) < pagina.total}">
+											<a th:href="${pagina.urlParaPagina(pagina.total - 1)}"> ...
+												<span th:text="${pagina.total}"></span>
+											</a>
+										</li>
+
+										<li th:class="${pagina.ultima} ? disabled">
+											<a th:if="${not pagina.ultima}" th:href="${pagina.urlParaPagina(paginaAtual + 1)}" th:remove="${pagina.ultima} ? tag">
+												<i>></i>
+											</a>
+										</li>
+									</ul>
+								</nav>
+							</div>
+
+						</div>
+					</div>
+
+
+
+				</div>
+
+
+
+
+
+			</div>
+		</div>
+
+	</section>
+	<th:block layout:fragment="javascript-extra">
+
+
+
+	</th:block>
+</body>
+
+</html>
